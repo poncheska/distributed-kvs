@@ -1,0 +1,90 @@
+# golangci-lint: 1.55.2
+
+run:
+  timeout: 5m
+  output:
+    format: tab
+  skip-dirs:
+    - vendor
+linters-settings:
+  gocognit:
+    # Minimal code complexity to report.
+    # Default: 30 (but we recommend 10-20)
+    min-complexity: 10
+  gocyclo:
+    # Minimal code complexity to report.
+    # Default: 30 (but we recommend 10-20)
+    min-complexity: 10
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0.1
+  maligned:
+    suggest-new: true
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - commentedOutCode
+      - wrapperFunc
+      - hugeParam
+      - rangeValCopy
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - govet
+    - unconvert
+    - gas
+    - gocyclo
+    - dupl
+    - misspell
+    - unparam
+    - unused
+    - typecheck
+    - ineffassign
+    - stylecheck
+    - gochecknoinits
+    - exportloopref
+    - gocritic
+    - nakedret
+    - gosimple
+    - prealloc
+    - wsl
+    - gosimple
+    - grouper
+    - errcheck
+    - errorlint
+#    - wrapcheck
+    - gosec
+    - gocognit
+    - gocyclo
+  fast: false
+
+issues:
+  exclude-rules:
+    - text: "at least one file in a package should have a package comment"
+      linters:
+        - stylecheck
+    - text: "should have a package comment, unless it's in another file for this package"
+      linters:
+        - golint
+    - path: _test\.go
+      linters:
+        - gosec
+        - dupl
+    - path: cmd/
+      linters:
+        - typecheck
+
+  exclude-use-default: false

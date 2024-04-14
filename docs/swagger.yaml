@@ -1,0 +1,118 @@
+definitions:
+  store.getResponse:
+    properties:
+      value:
+        type: string
+    type: object
+  store.joinRequest:
+    properties:
+      addr:
+        type: string
+      value:
+        type: string
+    type: object
+  store.setRequest:
+    properties:
+      value:
+        type: string
+    type: object
+host: 127.0.0.1:8080
+info:
+  contact: {}
+  description: distributed key-value storage
+  title: Distributed Store
+  version: "1.0"
+paths:
+  /store:
+    post:
+      description: join distributed storage cluster
+      parameters:
+      - description: storage key
+        in: path
+        name: key
+        required: true
+        type: string
+      - description: join storage params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/store.joinRequest'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Join
+      tags:
+      - Store
+  /store/{key}:
+    delete:
+      description: delete value by key
+      parameters:
+      - description: storage key
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Delete
+      tags:
+      - Store
+    get:
+      description: get value by key
+      parameters:
+      - description: storage key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/store.getResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get
+      tags:
+      - Store
+    put:
+      description: set value for key
+      parameters:
+      - description: storage key
+        in: path
+        name: key
+        required: true
+        type: string
+      - description: new value
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/store.setRequest'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Set
+      tags:
+      - Store
+schemes:
+- http
+swagger: "2.0"

@@ -1,0 +1,13 @@
+httpServer:
+  port: 8081
+  logging: true
+
+store:
+  joinURL: 127.0.0.1:8080/store
+  type: raft
+  raft:
+    #nodeID: node-1
+    inMem: true
+    addr: 127.0.0.1:9081
+    enableSingle: true
+  zab:

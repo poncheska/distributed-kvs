@@ -1,0 +1,50 @@
+version: '3'
+services:
+  app:
+    image: app
+    build: ./
+    ports:
+      - 8081:8081
+      - 8082:8082
+      - 8083:8083
+
+  nginx:
+    image: nginx
+    logging:
+      driver: none
+    volumes:
+      - "./infra-configs/nginx/nginx.conf:/etc/nginx/nginx.conf"
+    ports:
+      - 8080:8080
+
+  # TODO prometheus + grafana
+
+  zoo1:
+    image: zookeeper
+    restart: always
+    hostname: zoo1
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+
+  zoo2:
+    image: zookeeper
+    restart: always
+    hostname: zoo2
+    ports:
+      - 2182:2181
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+
+  zoo3:
+    image: zookeeper
+    restart: always
+    hostname: zoo3
+    ports:
+      - 2183:2181
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
