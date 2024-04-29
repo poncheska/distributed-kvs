@@ -1,3 +1,6 @@
 .idea
 
 snapshots
+
+vendor-proto
+bin

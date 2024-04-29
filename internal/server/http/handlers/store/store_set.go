@@ -2,8 +2,11 @@ package store
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+
+	storeerrors "distributed-kvs/internal/store/errors"
 )
 
 type setRequest struct {
@@ -39,7 +42,12 @@ func (i *Implementation) Set(w http.ResponseWriter, r *http.Request) {
 
 	err = i.store.Set(key, req.Value)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		if errors.Is(err, storeerrors.ErrActionUnavailable) {
+			w.WriteHeader(http.StatusServiceUnavailable)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
 		return
 	}
 

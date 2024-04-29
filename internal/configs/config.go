@@ -17,12 +17,17 @@ const (
 
 type Config struct {
 	HTTPServer HTTPServerConfig `yaml:"httpServer"`
+	GRPCServer GRPCServerConfig `yaml:"grpcServer"`
 	Store      StoreConfig      `yaml:"store"`
 }
 
 type HTTPServerConfig struct {
 	Port    int  `yaml:"port"`
 	Logging bool `yaml:"logging"`
+}
+
+type GRPCServerConfig struct {
+	Port int `yaml:"port"`
 }
 
 type StoreConfig struct {

@@ -1,7 +1,10 @@
 package store
 
 import (
+	"errors"
 	"net/http"
+
+	storeerrors "distributed-kvs/internal/store/errors"
 )
 
 // Delete  godoc
@@ -22,7 +25,12 @@ func (i *Implementation) Delete(w http.ResponseWriter, r *http.Request) {
 
 	err = i.store.Delete(key)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		if errors.Is(err, storeerrors.ErrActionUnavailable) {
+			w.WriteHeader(http.StatusServiceUnavailable)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
 		return
 	}
 

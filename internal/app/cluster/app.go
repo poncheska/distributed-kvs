@@ -9,8 +9,10 @@ import (
 	"syscall"
 
 	"distributed-kvs/internal/configs"
+	"distributed-kvs/internal/server/grpc"
 	"distributed-kvs/internal/server/http"
-	storehandler "distributed-kvs/internal/server/http/handlers/store"
+	storehttphandler "distributed-kvs/internal/server/http/handlers/store"
+	storegrpchandler "distributed-kvs/internal/server/grpc/handlers/store"
 	"distributed-kvs/internal/store"
 	"golang.org/x/sync/errgroup"
 )
@@ -40,12 +42,23 @@ func Run(ctx context.Context) error {
 			return fmt.Errorf("new store: %w", err)
 		}
 
-		storeHandler := storehandler.New(storeSvc, nodeLogger)
+		storeHTTPHandler := storehttphandler.New(storeSvc, nodeLogger)
 
 		eg.Go(func() error {
-			errG := http.NewServer(nodeCfg.HTTPServer, storeHandler, nodeLogger).Start(ctx)
+			errG := http.NewServer(nodeCfg.HTTPServer, storeHTTPHandler, nodeLogger).Start(ctx)
 			if errG != nil {
 				return fmt.Errorf("start server (%v): %w", nodeCfg.HTTPServer.Port, errG)
+			}
+
+			return nil
+		})
+
+		storeGRPCHandler := storegrpchandler.New(storeSvc)
+
+		eg.Go(func() error {
+			errG := grpc.NewServer(nodeCfg.GRPCServer, storeGRPCHandler, nodeLogger).Start(ctx)
+			if errG != nil {
+				return fmt.Errorf("start server (%v): %w", nodeCfg.GRPCServer.Port, errG)
 			}
 
 			return nil

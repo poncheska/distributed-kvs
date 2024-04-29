@@ -19,6 +19,7 @@ import (
 	"sync"
 	"time"
 
+	"distributed-kvs/internal/store/errors"
 	"github.com/hashicorp/raft"
 	raftboltdb "github.com/hashicorp/raft-boltdb/v2"
 )
@@ -134,7 +135,7 @@ func (s *Store) Get(key string) (string, error) {
 // Set sets the value for the given key.
 func (s *Store) Set(key, value string) error {
 	if s.raft.State() != raft.Leader {
-		return fmt.Errorf("not leader")
+		return fmt.Errorf("%w: not leader", errors.ErrActionUnavailable)
 	}
 
 	c := &command{
@@ -154,7 +155,7 @@ func (s *Store) Set(key, value string) error {
 // Delete deletes the given key.
 func (s *Store) Delete(key string) error {
 	if s.raft.State() != raft.Leader {
-		return fmt.Errorf("not leader")
+		return fmt.Errorf("%w: not leader", errors.ErrActionUnavailable)
 	}
 
 	c := &command{

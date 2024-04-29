@@ -2,6 +2,9 @@
     port: 8081
     logging: true
 
+  grpcServer:
+    port: 8091
+
   store:
     joinURL: http://127.0.0.1:8081/store
     type: raft
@@ -16,6 +19,9 @@
     port: 8082
     logging: true
 
+  grpcServer:
+    port: 8092
+
   store:
     joinURL: http://127.0.0.1:8081/store
     type: raft
@@ -29,6 +35,9 @@
 - httpServer:
     port: 8083
     logging: true
+
+  grpcServer:
+    port: 8093
 
   store:
     joinURL: http://127.0.0.1:8081/store
